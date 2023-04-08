@@ -54,7 +54,7 @@ function buy(OPCODE){
             ifelem.innerHTML = "if";
 
             let conditionelem = document.createElement('span');
-            conditionelem.classList.add('base-code');
+            conditionelem.classList.add('base-condition');
             conditionelem.innerHTML = 'CONDITION';
             conditionelem.id = `condition-${ifindex}`;
 
@@ -73,16 +73,30 @@ function buy(OPCODE){
             break;
         case CODES.CONDITION:
             let condelem = document.createElement('span');
-            condelem.id = `cd-${fieldindex}`;
-            condelem.classList.add('base-code');
-            condelem.innerHTML = Math.floor(Math.random()*31);
+            condelem.id = `cn-${fieldindex}`;
+            condelem.classList.add('base-condition');
+            condelem.innerHTML = `bit ${Math.floor(Math.random()*31)}`;
             blockholder.appendChild(condelem);
             fieldindex++;
 
             break;
         case CODES.CODE:
+            let cdelem = document.createElement('span');
+            cdelem.id = `cd-${fieldindex}`;
+            cdelem.classList.add('base-code');
+            cdelem.innerHTML = `x${Math.ceil(Math.random()*15)}`;
+            blockholder.appendChild(cdelem);
+            fieldindex++;
+
             break;
         case CODES.TIMER:
+            let tmelem = document.createElement('span');
+            tmelem.id = `tm-${fieldindex}`;
+            tmelem.classList.add('base-timer');
+            tmelem.innerHTML = `${Math.floor(Math.random()*31)}s`;
+            blockholder.appendChild(tmelem);
+            fieldindex++;
+
             break;
         default:
             console.log("ERROR")

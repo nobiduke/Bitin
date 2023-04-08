@@ -142,8 +142,9 @@ nav{
     height: 60vh;
     display: grid;
     justify-content: center;
-    grid-template-columns: 1fr 1fr;
-    
+    align-content: center;
+    grid-template-columns: 1fr 1fr 1fr;
+
 }
 .if-block{
     margin: 5px;
@@ -164,6 +165,9 @@ nav{
 
 }
 .base-code{
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
     user-select: none;
     font-family: consolas;
     margin: 5px;
@@ -172,6 +176,32 @@ nav{
     padding-right: 5px;
     background-color: #222243;
     color: #00b800;
+}
+.base-timer{
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-family: consolas;
+    margin: 5px;
+    border-radius: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #222243;
+    color: #fff75e;
+}
+.base-condition{
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-family: consolas;
+    margin: 5px;
+    border-radius: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #222243;
+    color: #35aeff;
 }
 
 /*
