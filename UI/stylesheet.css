@@ -21,7 +21,7 @@ nav{
     justify-content: center;
     align-items: center;
     font-size: 10px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: consolas;
     color: #999999;
 }
 
@@ -87,7 +87,7 @@ nav{
     border-radius: 3px;
 }
 .shop-bit-amount{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: consolas;
 }
 .shop-bit-icon{
     height: 10px;
@@ -100,6 +100,12 @@ nav{
     grid-template-columns: 2fr 1fr;
     justify-items: center;
     align-items: center;
+}
+.shop-price{
+    background-color: #AAAACC;
+    border-radius: 10px;
+    font-family: consolas;
+    font-size: small;
 }
 
 /*
@@ -130,31 +136,37 @@ nav{
     height: 60vh;
 }
 .if-block{
-    margin: 10px;
-    padding: 10px;
+    margin: 5px;
+    padding: 5px;
     background-color: #AAAACC;
+    font-size: smaller;
     user-select: none;
-
+    font-family: consolas;
+    
 }
 .while-block{
     user-select: none;
-
-    margin: 10px;
-    padding: 10px;
+    font-size: smaller;
+    margin: 5px;
+    padding: 5px;
     background-color: #AAAACC;
+    font-family: consolas;
 
-}
-.base-condition{
-    border-radius: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-    background-color: #222243;
-    color: #00b800;
 }
 .base-code{
+    font-family: consolas;
+    margin: 5px;
     border-radius: 4px;
     padding-left: 5px;
     padding-right: 5px;
     background-color: #222243;
     color: #00b800;
+}
+
+/*
+    FONTS
+*/
+@font-face {
+    font-family: consolas;
+    src: url(./Consolas.ttf);
 }

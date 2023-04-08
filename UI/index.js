@@ -1,4 +1,9 @@
-
+const CODES = {
+    IF: 0,
+    CONDITION: 1,
+    CODE: 2,
+    TIMER: 3
+}
 
 var bitGrid = document.getElementById('bit-grid');
 var bitAmount = document.getElementById('shop-bit-amount');
@@ -12,6 +17,12 @@ for(let i = 0; i < 32; i++){
     bitElem.style.width = `${BITDIM}px`;
     bitElem.style.height = `${BITDIM}px`;
     bitElem.style.backgroundColor = BIT_OFF;
+    bitElem.style.display = 'flex';
+    bitElem.style.justifyContent = 'center';
+    bitElem.style.alignItems = 'center';
+    bitElem.style.fontSize = `${BITDIM-5}px`;
+    bitElem.style.fontFamily = 'consolas';
+    bitElem.innerHTML = 31-i;
     bitElem.id = `bit-${31-i}`;
 
     // add each bit to bit grid 
@@ -20,6 +31,27 @@ for(let i = 0; i < 32; i++){
 }
 
 let num = 0;
+
+function buy(OPCODE){
+    // console.log(OPCODE);
+    switch(OPCODE){
+        case CODES.IF:
+            break;
+        case CODES.CONDITION:
+            break;
+        case CODES.CODE:
+            break;
+        case CODES.TIMER:
+            break;
+        default:
+            console.log("ERROR")
+    }
+}
+
+const buyIF = () => buy(CODES.IF);
+const buyCN = () => buy(CODES.CONDITION);
+const buyCD = () => buy(CODES.CODE);
+const buyTM = () => buy(CODES.TIMER);
 
 function updateBits(num){
     let strNum = num.toString(2);

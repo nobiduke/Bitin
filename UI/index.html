@@ -22,19 +22,28 @@
                 <div class="shop-merch" id="shop-merch">
                     <span id="shop-if" class="if-block">
                         IF 
-                        <span class="base-condition">CONDITION</span>
+                        <span class="base-code">CONDITION</span>
                         THEN
                         <span class="base-code">CODE</span>
                     </span>
-                    <span id="if-price">0</span>
-                    <span id="shop-while" class="while-block">
+                    <button id="if-price" class="shop-price" onclick="buyIF()">BUY: 0</button>
+                    <!-- <span id="shop-while" class="while-block">
                         WHILE
-                        <span class="base-condition">CONDITION</span>
-                        DO
-                        <span class="base-code">CODE</span>
+                        <span class="base-code">TIMER</span>
                     </span>
-                    <span id="while-price">0</span>
-
+                    <button id="while-price" class="shop-price">BUY: 0</button> -->
+                    <span id="shop-condition" class="base-code">
+                        CONDITION
+                    </span>
+                    <button id="while-price" class="shop-price" onclick="buyCN()">BUY: 0</button>
+                    <span id="shop-code" class="base-code">
+                        CODE
+                    </span>
+                    <button id="while-price" class="shop-price" onclick="buyCD()">BUY: 0</button>
+                    <span id="shop-timer" class="base-code">
+                        TIMER
+                    </span>
+                    <button id="while-price" class="shop-price" onclick="buyTM()">BUY: 0</button>
                 </div>
             </div>
         </div>
