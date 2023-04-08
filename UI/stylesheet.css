@@ -58,11 +58,17 @@ nav{
     CONSOLE CLASSES
 */
 .console-holder{
-    margin: 0px;
     border: 1px solid slategray;
     background-color: #334455;
     height: 60vh;
     width: 100%;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+}
+.console-if-holder{
+    display: grid;
+    justify-items: center;
 }
 
 /*
@@ -134,6 +140,10 @@ nav{
     border: 1px solid slategray;
     background-color: #223354;
     height: 60vh;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+    
 }
 .if-block{
     margin: 5px;
@@ -154,6 +164,7 @@ nav{
 
 }
 .base-code{
+    user-select: none;
     font-family: consolas;
     margin: 5px;
     border-radius: 4px;

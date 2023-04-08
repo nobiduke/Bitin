@@ -1,3 +1,4 @@
+// buyable enum type thing
 const CODES = {
     IF: 0,
     CONDITION: 1,
@@ -5,6 +6,15 @@ const CODES = {
     TIMER: 3
 }
 
+// important game variables
+var num = 0; // the current bit amount
+var ifindex = 0;
+var fieldindex = 0;
+var console = document.getElementById('console-holder');
+var ifholder = document.getElementById('console-if-holder');
+var blockholder= document.getElementById('block-holder');
+
+// bit grid initialization variables
 var bitGrid = document.getElementById('bit-grid');
 var bitAmount = document.getElementById('shop-bit-amount');
 const BITDIM = 20;
@@ -30,14 +40,45 @@ for(let i = 0; i < 32; i++){
     bitGrid.appendChild(bitElem);
 }
 
-let num = 0;
-
+// create elements after purchase
 function buy(OPCODE){
     // console.log(OPCODE);
     switch(OPCODE){
         case CODES.IF:
+            if(ifindex >= 5){
+                break;
+            }
+            let ifelem = document.createElement('span');
+            ifelem.classList.add('if-block');
+            ifelem.id = `if-${ifindex}`;
+            ifelem.innerHTML = "if";
+
+            let conditionelem = document.createElement('span');
+            conditionelem.classList.add('base-code');
+            conditionelem.innerHTML = 'CONDITION';
+            conditionelem.id = `condition-${ifindex}`;
+
+            ifelem.appendChild(conditionelem);
+            ifelem.innerHTML+="then";
+
+            let codeelem = document.createElement('span');
+            codeelem.classList.add('base-code');
+            codeelem.innerHTML = 'CODE';
+            codeelem.id = `code-${ifindex}`;
+            ifelem.appendChild(codeelem);
+
+            ifindex++;
+
+            ifholder.appendChild(ifelem);
             break;
         case CODES.CONDITION:
+            let condelem = document.createElement('span');
+            condelem.id = `cd-${fieldindex}`;
+            condelem.classList.add('base-code');
+            condelem.innerHTML = Math.floor(Math.random()*31);
+            blockholder.appendChild(condelem);
+            fieldindex++;
+
             break;
         case CODES.CODE:
             break;
@@ -48,11 +89,13 @@ function buy(OPCODE){
     }
 }
 
+// button functions
 const buyIF = () => buy(CODES.IF);
 const buyCN = () => buy(CODES.CONDITION);
 const buyCD = () => buy(CODES.CODE);
 const buyTM = () => buy(CODES.TIMER);
 
+// updates the bits visually
 function updateBits(num){
     let strNum = num.toString(2);
     let zeros = "";
@@ -72,17 +115,20 @@ function updateBits(num){
     }
 }
 
+// game loop init
 let frame = 0;
 let delay = 64;
+
+// game loop
 function looper(d){
-    if (frame % delay == 0){
+    if (frame % delay == 0){ // on set amount of frames inc
         num+=1;
-        updateBits(num);
     }
     
-    frame++;
-    bitAmount.innerHTML = num;
-    window.requestAnimationFrame(looper);
+    updateBits(num); // update the bit visuals
+    frame++; // inc frame amount
+    bitAmount.innerHTML = num; // update shop bit amount
+    window.requestAnimationFrame(looper); // loop
 }
 
 window.requestAnimationFrame(looper)
