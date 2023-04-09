@@ -77,6 +77,7 @@ function buy(OPCODE){
             condelem.classList.add('base-condition');
             condelem.innerHTML = `bit ${Math.floor(Math.random()*31)}`;
             blockholder.appendChild(condelem);
+
             fieldindex++;
 
             break;
@@ -111,13 +112,8 @@ const buyTM = () => buy(CODES.TIMER);
 
 // updates the bits visually
 function updateBits(num){
-    let strNum = num.toString(2);
-    let zeros = "";
-    for(let i = 0; i < 32-strNum.length; i++){
-        zeros+="0";
-    }
-    strNum = zeros+strNum;
-    let i = 0
+    let strNum = convertBits(num);
+    let i = 0;
     for(const node of document.getElementById('bit-grid').children){
         
         if (strNum[i] == '0'){
@@ -129,13 +125,14 @@ function updateBits(num){
     }
 }
 
+
 // game loop init
 let frame = 0;
 let delay = 64;
 
-// game loop
 function looper(d){
     if (frame % delay == 0){ // on set amount of frames inc
+        buyCode();
         num+=1;
     }
     

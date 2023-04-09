@@ -1,76 +1,64 @@
-const res = require("express/lib/response")
-
-var BITS = 0
-let BITS_2= ""
-let whiles = 1
-var RUN = false
-var CMD= ""
-let whileCost = 100;
-
-const IF = "?"
-const BITSLENGTH = 32
 
 
-function baseBits(){
-    return whiles
-}
+const IF = "?";
+const BITSLENGTH = 32;
+const BILLION = 1000000000;
 
 function switchRun(){
-   RUN = RUN ? false: true
+   RUN = RUN ? false: true;
 }
 
 // addition and BITS are in base 10
 function addTotal(addition){
-    let total = addition + BITS
+    let total = addition + BITS;
 
-    BITS = total
-    BITS_2 = convertBits(total)
+    BITS = total;
+    BITS_2 = convertBits(total);
 }
 
 // convert base 10 into base 2
-function convertBits(int){
-    let convert = ""
-
-    // add leading zeroes
-    for(let x = 0; x < (BITSLENGTH-int.length); x++){
-        convert += "0"
+function convertBits(){
+    let strNum = num.toString(2);
+    let zeros = "";
+    for(let i = 0; i < 32-strNum.length; i++){
+        zeros+="0";
     }
-    convert += int.toString(2)
+    strNum = zeros+strNum;
+    return strNum;
+}
 
-    return convert
+let code = 0;
+
+function buyCode(){
+    let cost = (code+60)/5.6;
+    if (num >= cost){
+        num = num - Math.floor(cost);
+        code++;
+        return true;
+    }
+
+    return false;
+    
+}
+
+let ifs = 0;
+function buyIfs(){
+    let cost = (2**(ifs+10))/100;
+    if (num >= cost){
+        num = num - Math.floor(cost);
+        ifs++;
+        return true;
+    }
+
+    return false;
 }
 
 // selects a random bit checks if its on, if so double the base points gained 
-function Conditionals(){
-    let random = Math.floor(math.random()* BITSLENGTH)
-    if(BITS_2[random] == "1"){
-        return baseBits() *2
+function useConditionals(Condition , Code){
+    strNum = convertBits();
+    if(strNum[Condition] == "1"){
+        return Code;
     }
-    return 0
+
+    return 0;
 }
-
-// buy a while loop bonus
-function getWhile(){
-    if(BITS >= whileCost){
-        BITS -= whileCost
-        whiles++
-    }
-
-    else{
-        console.log("Not enough bits to purchase")
-    }
-}
-
-function gameLoop(delta){
-    let addition = 0
-    for(let x in CMD){
-        if( x == IF){
-            addition += Conditionals()
-        }
-    }
-
-    addTotal(addition)
-    window.requestAnimationFrame(gameLoop)
-}
-
-window.requestAnimationFrame(gameLoop);
