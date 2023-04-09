@@ -16,7 +16,8 @@ var mouseX = 0;
 var mouseY = 0;
 var draggable = false;
 var moving = false;
-var console = document.getElementById('console-holder');
+var droppable = false;
+var consoleelem = document.getElementById('console-holder');
 var ifholder = document.getElementById('console-if-holder');
 var blockholder= document.getElementById('block-holder');
 document.addEventListener('mousemove', (e) => {
@@ -24,6 +25,7 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.pageY;
 
     if(moving === true){
+        draggable.style.pointerEvents = 'none';
         draggable.style.position = 'absolute';
         draggable.style.left = `${mouseX-draggable.offsetWidth}px`;
         draggable.style.top = `${mouseY-draggable.offsetHeight}px`;
@@ -36,7 +38,16 @@ document.addEventListener('mousedown', (e) => {
 });
 document.addEventListener('mouseup', (e) =>{
     if(draggable === false){return;}
+    if(droppable !== false){
+        if(draggable.id[0]+draggable.id[1] == "cn" || draggable.id[0] + draggable[1] == "tm"){
+            droppable.children[0].innerHTML = draggable.innerHTML;
+        } else{
+            droppable.children[1].innerHTML = draggable.innerHTML;
+        }
+        blockholder.removeChild(draggable);
+    }
     moving = false;
+    draggable.style.pointerEvents = 'auto';
     draggable.style.left = "";
     draggable.style.top = "";
     draggable.style.position = "relative";
@@ -61,6 +72,7 @@ for(let i = 0; i < 32; i++){
     bitElem.style.alignItems = 'center';
     bitElem.style.fontSize = `${BITDIM-5}px`;
     bitElem.style.fontFamily = 'consolas';
+    bitElem.style.userSelect = 'none';
     bitElem.innerHTML = 31-i;
     bitElem.id = `bit-${31-i}`;
 
@@ -73,6 +85,9 @@ for(let i = 0; i < 32; i++){
      adds drag events to a passed in field elem
 */
 function addFieldDragEvents(elem){
+    elem.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.setData("text", e.target.id);
+    })
     elem.addEventListener('mouseenter', (e) =>{
         if (draggable === false){
             draggable = elem;
@@ -88,14 +103,32 @@ function addFieldDragEvents(elem){
 /*
     adds drag events to passed in statement element
 */
-function addStatementDragEvents(elem){
+function addIfDragEvents(elem){
     elem.addEventListener('mouseenter', (e) =>{
+        e.preventDefault();
         if(!moving){return;}
         let type = draggable.id[0] + draggable.id[1]; // first two char of id is type
 
+        let targetElem;
+        if (type == "cn"){
+            targetElem = elem.children[0];
+        } else if(type == "cd"){
+            targetElem = elem.children[1];
+        } else{
+            return;
+        }
+
+        targetElem.style.backgroundColor = "#666687";
+        droppable = elem;
+
     });
     elem.addEventListener('mouseleave', (e) =>{
-        console.log(elem);
+        e.preventDefault();
+        let condelem = elem.children[0];
+        let codeelem = elem.children[1];
+        condelem.style.backgroundColor = "#222243";
+        codeelem.style.backgroundColor = "#222243";
+        droppable = false;
     });
 }
 
@@ -128,7 +161,7 @@ function buy(OPCODE){
 
             ifindex++;
 
-            addStatementDragEvents(ifelem);
+            addIfDragEvents(ifelem);
 
             ifholder.appendChild(ifelem);
             break;
@@ -148,7 +181,7 @@ function buy(OPCODE){
             let cdelem = document.createElement('span');
             cdelem.id = `cd-${fieldindex}`;
             cdelem.classList.add('base-code');
-            cdelem.innerHTML = `x${Math.ceil(Math.random()*15)}`;
+            cdelem.innerHTML = `x${Math.ceil(Math.random()*15)+1}`;
             addFieldDragEvents(cdelem);
             blockholder.appendChild(cdelem);
             fieldindex++;
