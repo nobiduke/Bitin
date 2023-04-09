@@ -1,4 +1,4 @@
-// index.js for Bitin' by Nobiduke
+// index.js for Bitin' by Nobiduke(Landon Jones)
 
 const TWOTWOTHREETWO = 4294967296;
 
