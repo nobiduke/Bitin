@@ -11,6 +11,10 @@ const CODES = {
 // important game variables
 var num = 0; // the current bit amount
 var ifindex = 0; // current ifamount
+var numCodes = 0; // bought codes
+var numConds = 0; // bought conds
+var numTimers = 0; // bought timers
+var numPmults = 0; // bought pmults
 var fieldindex = 0; // current field id
 var fieldAmount = 0;
 var mouseX = 0; // mouse pos
@@ -19,15 +23,47 @@ var draggable = false; // current held elem
 var moving = false; // is elem held
 var droppable = false; // elem that is dropped on
 
+// merch prices
+var ifPrice = 0;
+var condPrice = 0;
+var codePrice = 0;
+var timerPrice = 0;
+var pmultPrice = 10000;
+var ifPriceElem = document.getElementById('if-price');
+var condPriceElem = document.getElementById('cond-price');
+var codePriceElem = document.getElementById('code-price');
+var timerPriceElem = document.getElementById('timer-price');
+// var pmultPriceElem = document.getElementById('pmult-price');
+
 // import arrays
-var currConditionals = [-1, -1, -1, -1, -1];
-var currCodes = [-1, -1, -1, -1, -1];
+var currConditionals = [-1, -1, -1, -1, -1, -1];
+var currCodes = [-1, -1, -1, -1, -1, -1];
 var currTimer = -1;
 
 // import references
 var consoleelem = document.getElementById('console-holder');
 var ifholder = document.getElementById('console-if-holder');
 var blockholder= document.getElementById('block-holder');
+
+/*
+    price setting
+*/
+function setPrices(){
+    if (ifindex == 0){
+        ifPrice == 0;
+    } else{
+        ifPrice = Math.floor((2**(ifindex*3+12))/100);
+    }
+    condPrice = Math.floor(2**numConds + numConds);
+    codePrice = Math.floor(2**numCodes + numCodes);
+    timerPrice = Math.floor(2**numTimers + numTimers);
+
+    ifPriceElem.innerHTML = `BUY: ${ifPrice}`;
+    condPriceElem.innerHTML = `BUY: ${condPrice}`;
+    codePriceElem.innerHTML = `BUY: ${codePrice}`;
+    timerPriceElem.innerHTML = `BUY: ${timerPrice}`;
+    // pmultPriceElem.innerHTML = `BUY: ${pmultPrice}`;
+}
 
 /*
     game state functions
@@ -71,10 +107,16 @@ document.addEventListener('mousedown', (e) => {
 document.addEventListener('mouseup', (e) =>{
     if(draggable === false){return;}
     if(droppable !== false){
-        if(draggable.id[0]+draggable.id[1] == "cn" || draggable.id[0]+draggable.id[1] == "tm"){
+        if(draggable.id[0]+draggable.id[1] == "cn"){
             droppable.children[0].innerHTML = draggable.innerHTML;
-        } else{
+            numConds--;
+        } else if(draggable.id[0]+draggable.id[1] == "tm"){
+            droppable.children[0].innerHTML = draggable.innerHTML;
+            numTimers--;
+        }
+        else{
             droppable.children[1].innerHTML = draggable.innerHTML;
+            numCodes--;
         }
         addField((draggable.id[0]+draggable.id[1]), draggable.innerHTML, droppable.id[3]);
         blockholder.removeChild(draggable);
@@ -193,7 +235,10 @@ function buy(OPCODE){
 
     switch(OPCODE){
         case CODES.IF: // if statement purchased
-            if(ifindex >= 5){
+            if(ifindex >= 6){ // 6 if statement max for balancing
+                break;
+            }
+            if(num < ifPrice){
                 break;
             }
             let ifelem = document.createElement('span');
@@ -215,6 +260,7 @@ function buy(OPCODE){
             codeelem.id = `code-${ifindex}`;
             ifelem.appendChild(codeelem);
 
+            num -= ifPrice;
             ifindex++;
 
             addIfDragEvents(ifelem);
@@ -223,17 +269,27 @@ function buy(OPCODE){
             break;
         case CODES.CONDITION: // condition purchase selected
             if (fieldAmount >= 30){break;}
+            if(num < condPrice){
+                break;
+            }
             let condelem = document.createElement('span');
             condelem.id = `cn-${fieldindex}`;
             condelem.classList.add('base-condition');
             condelem.innerHTML = `bit ${Math.floor(Math.random()*31)}`;
             addFieldDragEvents(condelem);
             blockholder.appendChild(condelem);
+
+            num -= condPrice;
+            numConds++;
+
             fieldindex++;
             fieldAmount++;
             
             break;
         case CODES.CODE: // code purchase selected
+            if(num < codePrice){
+                break;
+            }
             if (fieldAmount >= 30){break;}
             let cdelem = document.createElement('span');
             cdelem.id = `cd-${fieldindex}`;
@@ -241,18 +297,29 @@ function buy(OPCODE){
             cdelem.innerHTML = `${Math.ceil(Math.random()*15)+1}x`;
             addFieldDragEvents(cdelem);
             blockholder.appendChild(cdelem);
+
+            num-=codePrice;
+            numCodes++;
+
             fieldindex++;
             fieldAmount++;
             
             break;
         case CODES.TIMER: // timer purchase selected
             if (fieldAmount >= 30){break;}
+            if(num < timerPrice){
+                break;
+            }
             let tmelem = document.createElement('span');
             tmelem.id = `tm-${fieldindex}`;
             tmelem.classList.add('base-timer');
             tmelem.innerHTML = `${Math.ceil(Math.random()*15)+4}s`;
             addFieldDragEvents(tmelem);
             blockholder.appendChild(tmelem);
+
+            num-=timerPrice;
+            numTimers++;
+
             fieldindex++;
             fieldAmount++;
 
@@ -302,7 +369,7 @@ function looper(d){
         onBits = updateBits(num); // update the bit visuals
         let run = false;
         let multp = 1;
-        for(let i = 0; i < 5; i++){
+        for(let i = 0; i < 6; i++){ // check all conditionals and codes
             if(currConditionals[i] == -1 || currCodes[i] == -1){
                 break;
             } else{
@@ -317,13 +384,13 @@ function looper(d){
         }
         if(currTimer < 0){
             multp = 1;
-            if(currTimer == -1 && prevTime == 0){
+            if(currTimer == -1 && prevTime == 0){ // if timer just reset, begin reset
                 for(const elem of ifholder.children){
                     elem.children[0].innerHTML = "CONDITIONAL";
                     elem.children[1].innerHTML = "CODE";
                 }
-                currConditionals = [-1, -1, -1, -1, -1];
-                currCodes = [-1, -1, -1, -1, -1];
+                currConditionals = [-1, -1, -1, -1, -1, -1]; // reset conditionals
+                currCodes = [-1, -1, -1, -1, -1, -1]; // reset codes
             }
         }
         num+=multp;
@@ -331,6 +398,7 @@ function looper(d){
     
     whileElem.children[0].innerHTML = currTimer<0?"TIMER":`${currTimer}s`;
     updateBits(num); // update the bit visuals
+    setPrices(); // update prices
     frame++; // inc frame amount
     bitAmount.innerHTML = num; // update shop bit amount
     window.requestAnimationFrame(looper); // loop
