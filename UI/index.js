@@ -76,7 +76,7 @@ document.addEventListener('mouseup', (e) =>{
         } else{
             droppable.children[1].innerHTML = draggable.innerHTML;
         }
-        addField((draggable.id[0]+draggable.id[1]), draggable.innerHTML, draggable[3]);
+        addField((draggable.id[0]+draggable.id[1]), draggable.innerHTML, droppable.id[3]);
         blockholder.removeChild(draggable);
         fieldAmount--;
     }
@@ -298,21 +298,35 @@ let delay = 64;
 // game loop
 function looper(d){
     if (frame % delay == 0){ // on set amount of frames inc
+        let prevTime = currTimer;
         onBits = updateBits(num); // update the bit visuals
-        num+=1;
         let run = false;
+        let multp = 1;
         for(let i = 0; i < 5; i++){
-            if(currConditionals[i] == -1){
+            if(currConditionals[i] == -1 || currCodes[i] == -1){
                 break;
             } else{
                 run = true;
-
+                if (onBits[31-currConditionals[i]] == 1){
+                    multp*=currCodes[i];
+                }
             }
         }
         if(run){
             currTimer--;
         }
-        if(currTimer >= 0){}
+        if(currTimer < 0){
+            multp = 1;
+            if(currTimer == -1 && prevTime == 0){
+                for(const elem of ifholder.children){
+                    elem.children[0].innerHTML = "CONDITIONAL";
+                    elem.children[1].innerHTML = "CODE";
+                }
+                currConditionals = [-1, -1, -1, -1, -1];
+                currCodes = [-1, -1, -1, -1, -1];
+            }
+        }
+        num+=multp;
     }
     
     whileElem.children[0].innerHTML = currTimer<0?"TIMER":`${currTimer}s`;
