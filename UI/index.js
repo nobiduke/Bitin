@@ -404,7 +404,9 @@ function looper(d){
     frame++; // inc frame amount
     bitAmount.innerHTML = num; // update shop bit amount
     if(num >= 4294967296){
-        alert("BUFFER OVERFLOW");
+        console.log('BUFFER OVERFLOW');
+        delay/2;
+        document.getElementById('da-body').style.backgroundColor = '#FF0000';
     } else{
 
         window.requestAnimationFrame(looper); // loop
