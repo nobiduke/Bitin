@@ -1,5 +1,7 @@
 // index.js for Bitin' by Nobiduke
 
+const TWOTWOTHREETWO = 4294967296;
+
 // buyable enum type thing
 const CODES = {
     IF: 0,
@@ -401,7 +403,12 @@ function looper(d){
     setPrices(); // update prices
     frame++; // inc frame amount
     bitAmount.innerHTML = num; // update shop bit amount
-    window.requestAnimationFrame(looper); // loop
+    if(num >= 4294967296){
+        alert("BUFFER OVERFLOW");
+    } else{
+
+        window.requestAnimationFrame(looper); // loop
+    }
 }
 
 window.requestAnimationFrame(looper)
