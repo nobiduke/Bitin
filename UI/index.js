@@ -1,3 +1,5 @@
+// index.js for Bitin' by Nobiduke
+
 // buyable enum type thing
 const CODES = {
     IF: 0,
@@ -10,9 +12,36 @@ const CODES = {
 var num = 0; // the current bit amount
 var ifindex = 0;
 var fieldindex = 0;
+var mouseX = 0;
+var mouseY = 0;
+var draggable = false;
+var moving = false;
 var console = document.getElementById('console-holder');
 var ifholder = document.getElementById('console-if-holder');
 var blockholder= document.getElementById('block-holder');
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+
+    if(moving === true){
+        draggable.style.position = 'absolute';
+        draggable.style.left = `${mouseX-draggable.offsetWidth}px`;
+        draggable.style.top = `${mouseY-draggable.offsetHeight}px`;
+    }
+});
+document.addEventListener('mousedown', (e) => {
+    if(draggable === false){return;}
+    
+    moving = true;
+});
+document.addEventListener('mouseup', (e) =>{
+    if(draggable === false){return;}
+    moving = false;
+    draggable.style.left = "";
+    draggable.style.top = "";
+    draggable.style.position = "relative";
+    draggable = false;
+});
 
 // bit grid initialization variables
 var bitGrid = document.getElementById('bit-grid');
@@ -40,11 +69,41 @@ for(let i = 0; i < 32; i++){
     bitGrid.appendChild(bitElem);
 }
 
+/* 
+     adds drag events to a passed in field elem
+*/
+function addFieldDragEvents(elem){
+    elem.addEventListener('mouseenter', (e) =>{
+        if (draggable === false){
+            draggable = elem;
+        }
+    });
+    elem.addEventListener('mouseleave', (e) =>{
+        if (!moving){
+            draggable = false;
+        }
+    })
+}
+
+/*
+    adds drag events to passed in statement element
+*/
+function addStatementDragEvents(elem){
+    elem.addEventListener('mouseenter', (e) =>{
+        if(!moving){return;}
+        let type = draggable.id[0] + draggable.id[1]; // first two char of id is type
+
+    });
+    elem.addEventListener('mouseleave', (e) =>{
+        console.log(elem);
+    });
+}
+
 // create elements after purchase
 function buy(OPCODE){
-    // console.log(OPCODE);
+
     switch(OPCODE){
-        case CODES.IF:
+        case CODES.IF: // if statement purchased
             if(ifindex >= 5){
                 break;
             }
@@ -69,31 +128,39 @@ function buy(OPCODE){
 
             ifindex++;
 
+            addStatementDragEvents(ifelem);
+
             ifholder.appendChild(ifelem);
             break;
-        case CODES.CONDITION:
+        case CODES.CONDITION: // condition purchase selected
+            if (fieldindex >= 30){break;}
             let condelem = document.createElement('span');
             condelem.id = `cn-${fieldindex}`;
             condelem.classList.add('base-condition');
             condelem.innerHTML = `bit ${Math.floor(Math.random()*31)}`;
+            addFieldDragEvents(condelem);
             blockholder.appendChild(condelem);
             fieldindex++;
-
+            
             break;
-        case CODES.CODE:
+        case CODES.CODE: // code purchase selected
+            if (fieldindex >= 30){break;}
             let cdelem = document.createElement('span');
             cdelem.id = `cd-${fieldindex}`;
             cdelem.classList.add('base-code');
             cdelem.innerHTML = `x${Math.ceil(Math.random()*15)}`;
+            addFieldDragEvents(cdelem);
             blockholder.appendChild(cdelem);
             fieldindex++;
-
+            
             break;
-        case CODES.TIMER:
+        case CODES.TIMER: // timer purchase selected
+            if (fieldindex >= 30){break;}
             let tmelem = document.createElement('span');
             tmelem.id = `tm-${fieldindex}`;
             tmelem.classList.add('base-timer');
             tmelem.innerHTML = `${Math.floor(Math.random()*31)}s`;
+            addFieldDragEvents(tmelem);
             blockholder.appendChild(tmelem);
             fieldindex++;
 
